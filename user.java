@@ -1,24 +1,29 @@
 import java.util.*;
+import java.util.List;
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
 import java.io.*;
 
-
-
-class RestaurantBooking extends Frame 
+class RestaurantBooking extends Frame implements ActionListener
 {
+	
 	Button order,cart,CBplus,CBminus;
-	Button Shplus,Shminus,CNplus,CNminus;
-	Label chik_bri,sh,chik_nod;
-	TextField CBbox,Shbox,CNbox;
-	Image chicken_briyani,shawarma,ChickenNoodles;
-	int booking_id;
+	Button Shplus,Shminus,CNplus,CNminus,VBplus,VBminus;
+	Label chik_bri,sh,chik_nod,veg_bri;
+	TextField CBbox,Shbox,CNbox,VBbox;
+	Image chicken_briyani,shawarma,ChickenNoodles,VegBriyani;
+	Image background_img;
+	TextField total_price;
+	int customer_id=637980;
 	String address;
+	Map<String,Integer> price;
+	List<String> orders=new ArrayList<>();
 
-	RestaurantBooking()
+	RestaurantBooking(Map<String,Integer> price)
 	{
+		this.price=price;
 		setTitle("HUNGER G0");
 		
 		order=new Button("ORDER");
@@ -35,6 +40,13 @@ class RestaurantBooking extends Frame
 		CNplus=new Button("+");
 		CNminus=new Button("-");
 		CNbox=new TextField(0);
+		veg_bri=new Label("VEG Briyani");
+		VBplus=new Button("+");
+		VBminus=new Button("-");
+		VBbox=new TextField(0);
+
+		total_price=new TextField(0);
+
 
 
 		addWindowListener(new WindowAdapter() {
@@ -62,6 +74,22 @@ class RestaurantBooking extends Frame
 		CNminus.setBounds(750,210,20,20);
 		CNbox.setBounds(790,210,30,20);
 		CNbox.setText("0");
+		veg_bri.setBounds(100,480,150,20);
+		VBplus.setBounds(230,510,20,20);
+		VBminus.setBounds(180,510,20,20);
+		VBbox.setBounds(200,510,30,20);
+		VBbox.setText("0");
+		total_price.setBounds(1200,650,100,30);
+		total_price.setText("0");
+
+		CBplus.addActionListener(this);
+		CBminus.addActionListener(this);
+		Shplus.addActionListener(this);
+		Shminus.addActionListener(this);
+		CNplus.addActionListener(this);
+		CNminus.addActionListener(this);
+		VBplus.addActionListener(this);
+		VBminus.addActionListener(this);
 
 		
 
@@ -73,6 +101,10 @@ class RestaurantBooking extends Frame
 			shawarma=Toolkit.getDefaultToolkit().getImage(shawarmaURL);
 			URL CNURL=new URL("file:D:/pictures/chikken noodles.jpg");
 			ChickenNoodles=Toolkit.getDefaultToolkit().getImage(CNURL);
+			URL VB=new URL("file:D:/pictures/vegBriyani.jpg");
+			VegBriyani=Toolkit.getDefaultToolkit().getImage(VB);
+			URL BK=new URL("file:D:/pictures/background.png");
+			background_img=Toolkit.getDefaultToolkit().getImage(BK);
 		}
 		catch (MalformedURLException e) {
            		 e.printStackTrace();
@@ -91,6 +123,12 @@ class RestaurantBooking extends Frame
 		add(CNplus);
 		add(CNminus);
 		add(CNbox);
+		add(veg_bri);
+		add(VBplus);
+		add(VBminus);
+		add(VBbox);
+		add(total_price);
+
 
 		setSize(800,700);
 		setLayout(null);
@@ -98,14 +136,102 @@ class RestaurantBooking extends Frame
 		
 		
 	}
+	void ForPlus(String item,TextField TFbox,TextField total_price)
+	{
+		int quantity=Integer.parseInt(TFbox.getText());
+		int current_total =Integer.parseInt(total_price.getText());
+		int add_price=price.get(item);
+		quantity++;
+		current_total=current_total+add_price;
+		TFbox.setText(Integer.toString(quantity));
+		total_price.setText(Integer.toString(current_total));
+		return;
+	}
+
+	void Forminus(String item,TextField TFbox,TextField total_price)
+	{
+		int quantity=Integer.parseInt(TFbox.getText());
+		int current_total =Integer.parseInt(total_price.getText());
+		int sub_price=price.get(item);
+		if(quantity>0)
+		{
+			quantity--;
+			current_total=current_total-sub_price;
+			TFbox.setText(Integer.toString(quantity));
+			total_price.setText(Integer.toString(current_total));
+		}
+		
+		return;
+
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getSource()==CBplus)
+		{
+			ForPlus("chiken briyani",CBbox,total_price);
+		}
+		if(e.getSource()==Shplus)
+		{
+			ForPlus("shawarma",Shbox,total_price);
+		}
+		if(e.getSource()==VBplus)
+		{
+			ForPlus("veg briyani",VBbox,total_price);
+		}
+		if(e.getSource()==CNplus)
+		{
+			ForPlus("chiken noodles",CNbox,total_price);
+		}
+		if(e.getSource()==CBminus)
+		{
+			Forminus("chiken briyani",CBbox,total_price);
+		}
+		if(e.getSource()==Shminus)
+		{
+			Forminus("shawarma",Shbox,total_price);
+		}
+		if(e.getSource()==VBminus)
+		{
+			Forminus("veg briyani",VBbox,total_price);
+		}
+		if(e.getSource()==CNminus)
+		{
+			Forminus("chiken noodles",CNbox,total_price);
+		}
+
+
+
+
+	}
 	
 	public void paint(Graphics g)
 	{
+		if(background_img!=null)
+		{
+			g.drawImage(background_img,0,0,getWidth(),getHeight(),this);
+		}
 		if(chicken_briyani!=null && shawarma!=null && ChickenNoodles!=null)
 		{
 			g.drawImage(chicken_briyani,100,100,200,100,this);
 			g.drawImage(shawarma,400,100,200,100,this);
 			g.drawImage(ChickenNoodles,700,100,200,100,this);
+			
+
+		}
+		else
+		{
+			g.drawString("IMAGE NOT FOUND",100,300);
+			g.drawString("IMAGE NOT FOUND",400,300);
+			g.drawString("IMAGE NOT FOUND",700,300);
+		}
+		if(VegBriyani!=null)
+		{
+			g.drawImage(VegBriyani,100,400,200,100,this);
+		}
+		else
+		{
+			g.drawString("IMAGE NOT FOUND",100,400);
 
 		}
 	}
@@ -114,6 +240,12 @@ class RestaurantBooking extends Frame
 
 	public static void main(String[] argu)
 	{
-		new RestaurantBooking();
+		
+		Map<String,Integer> price=new HashMap<>();
+		price.put("chiken briyani",190);
+		price.put("veg briyani",120);
+		price.put("chiken noodles",90);
+		price.put("shawarma",130);
+		new RestaurantBooking(price);
 	}
 }
