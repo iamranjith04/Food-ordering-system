@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
 import java.io.*;
+import javax.swing.JOptionPane;
+import hotel.operation;
+import hotel.order;
 
 class RestaurantBooking extends Frame implements ActionListener
 {
@@ -19,11 +22,14 @@ class RestaurantBooking extends Frame implements ActionListener
 	int customer_id=637980;
 	String address;
 	Map<String,Integer> price;
-	List<String> orders=new ArrayList<>();
+	List<String> order_item;
+	int total_amount_of_order_item;
+	operation op;
 
 	RestaurantBooking(Map<String,Integer> price)
 	{
 		this.price=price;
+		op=new operation();
 		setTitle("HUNGER G0");
 		
 		order=new Button("ORDER");
@@ -90,6 +96,7 @@ class RestaurantBooking extends Frame implements ActionListener
 		CNminus.addActionListener(this);
 		VBplus.addActionListener(this);
 		VBminus.addActionListener(this);
+		order.addActionListener(this);
 
 		
 
@@ -136,74 +143,52 @@ class RestaurantBooking extends Frame implements ActionListener
 		
 		
 	}
-	void ForPlus(String item,TextField TFbox,TextField total_price)
-	{
-		int quantity=Integer.parseInt(TFbox.getText());
-		int current_total =Integer.parseInt(total_price.getText());
-		int add_price=price.get(item);
-		quantity++;
-		current_total=current_total+add_price;
-		TFbox.setText(Integer.toString(quantity));
-		total_price.setText(Integer.toString(current_total));
-		return;
-	}
 
-	void Forminus(String item,TextField TFbox,TextField total_price)
-	{
-		int quantity=Integer.parseInt(TFbox.getText());
-		int current_total =Integer.parseInt(total_price.getText());
-		int sub_price=price.get(item);
-		if(quantity>0)
-		{
-			quantity--;
-			current_total=current_total-sub_price;
-			TFbox.setText(Integer.toString(quantity));
-			total_price.setText(Integer.toString(current_total));
-		}
-		
-		return;
-
-	}
 
 	public void actionPerformed(ActionEvent e)
 	{
+
 		if(e.getSource()==CBplus)
 		{
-			ForPlus("chiken briyani",CBbox,total_price);
+			op.ForPlus(price,"chiken briyani",CBbox,total_price);
 		}
-		if(e.getSource()==Shplus)
+		else if(e.getSource()==Shplus)
 		{
-			ForPlus("shawarma",Shbox,total_price);
+			op.ForPlus(price,"shawarma",Shbox,total_price);
 		}
-		if(e.getSource()==VBplus)
+		else if(e.getSource()==VBplus)
 		{
-			ForPlus("veg briyani",VBbox,total_price);
+			op.ForPlus(price,"veg briyani",VBbox,total_price);
 		}
-		if(e.getSource()==CNplus)
+		else if(e.getSource()==CNplus)
 		{
-			ForPlus("chiken noodles",CNbox,total_price);
+			op.ForPlus(price,"chiken noodles",CNbox,total_price);
 		}
-		if(e.getSource()==CBminus)
+		else if(e.getSource()==CBminus)
 		{
-			Forminus("chiken briyani",CBbox,total_price);
+			op.Forminus(price,"chiken briyani",CBbox,total_price);
 		}
-		if(e.getSource()==Shminus)
+		else if(e.getSource()==Shminus)
 		{
-			Forminus("shawarma",Shbox,total_price);
+			op.Forminus(price,"shawarma",Shbox,total_price);
 		}
-		if(e.getSource()==VBminus)
+		else if(e.getSource()==VBminus)
 		{
-			Forminus("veg briyani",VBbox,total_price);
+			op.Forminus(price,"veg briyani",VBbox,total_price);
 		}
-		if(e.getSource()==CNminus)
+		else if(e.getSource()==CNminus)
 		{
-			Forminus("chiken noodles",CNbox,total_price);
+			op.Forminus(price,"chiken noodles",CNbox,total_price);
 		}
-
-
-
+		else if(e.getSource()==order)
+		{
+			order fdorder=new order(order_item,total_amount_of_order_item,CBbox,Shbox,VBbox,CNbox,total_price);
+			 JOptionPane.showMessageDialog(this, "Your order has been placed successfully!", "Order Confirmation",
+                    JOptionPane.INFORMATION_MESSAGE);	
+		}
 
 	}
+
 	
 	public void paint(Graphics g)
 	{
