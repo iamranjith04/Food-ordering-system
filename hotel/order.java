@@ -10,7 +10,9 @@ import java.io.*;
 
 public class order
 {
-	public order(List<String> order_item,int total_amount_of_order_item,TextField CB,TextField SH,TextField VB,TextField CN,TextField Total)
+	public List<String> order_item;
+   	public int totalAmount;
+	public order(TextField CB,TextField SH,TextField VB,TextField CN,TextField Total)
 	{
 		order_item=new ArrayList<>();
 		String item;
@@ -51,15 +53,10 @@ public class order
 				CN.setText("0");
 
 			}
-			total_amount_of_order_item=Integer.parseInt(Total.getText());
+			totalAmount=Integer.parseInt(Total.getText());
 			Total.setText("0");
 
-			int n=order_item.size();
-			for(int i=0;i<n;i++)
-			{
-				System.out.println(order_item.get(i));
-			}
-			System.out.println("price:"+total_amount_of_order_item);
+			
 		}
 	}
 }
