@@ -23,7 +23,7 @@ class RestaurantBooking extends Frame implements ActionListener
 	String address;
 	Map<String,Integer> price;
 	List<String> order_item;
-	int total_amount_of_order_item;
+	public int total_amount_of_order_item;
 	operation op;
 
 	RestaurantBooking(Map<String,Integer> price)
@@ -182,8 +182,16 @@ class RestaurantBooking extends Frame implements ActionListener
 		}
 		else if(e.getSource()==order)
 		{
-			order fdorder=new order(order_item,total_amount_of_order_item,CBbox,Shbox,VBbox,CNbox,total_price);
-			 JOptionPane.showMessageDialog(this, "Your order has been placed successfully!", "Order Confirmation",
+			order result=new order(CBbox,Shbox,VBbox,CNbox,total_price);
+			order_item=result.order_item;
+			total_amount_of_order_item=result.totalAmount;
+			int n=order_item.size();
+			for(int i=0;i<n;i++)
+			{
+				System.out.println(order_item.get(i));
+			}
+			System.out.println("price:"+total_amount_of_order_item);
+			JOptionPane.showMessageDialog(this, "Your order has been placed successfully!", "Order Confirmation",
                     JOptionPane.INFORMATION_MESSAGE);	
 		}
 
